@@ -1,9 +1,9 @@
 from utils.constants import (
     EXPECTED_POST_COUNT,
     EXPECTED_POST_FIELDS,
+    NON_EXISTENT_POST_ID,
     VALID_POST_ID,
 )
-
 
 class TestPostsAPI:
 
@@ -45,3 +45,20 @@ class TestPostsAPI:
 
         assert EXPECTED_POST_FIELDS.issubset(post.keys())
         assert post["id"] == VALID_POST_ID
+    
+    #Negative Cases
+    def test_get_post_with_non_existent_id(self, posts_api):
+        response = posts_api.get_post(9999)
+
+        assert response.status_code == 404
+
+
+    def test_get_post_with_invalid_id(self, posts_api):
+        response = posts_api.get_post("abc")
+
+        assert response.status_code == 404
+
+    def test_get_post_with_negative_id(self, posts_api):
+        response = posts_api.get_post(-1)
+
+        assert response.status_code == 404
